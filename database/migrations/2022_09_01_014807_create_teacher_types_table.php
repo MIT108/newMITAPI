@@ -1,6 +1,6 @@
 <?php
 
-use App\Models\Role;
+use App\Models\TeacherType;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -14,25 +14,16 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('roles', function (Blueprint $table) {
+        Schema::create('teacher_types', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
+            $table->string("name");
             $table->timestamps();
         });
-        Role::create([
-            'name'=>'Super Admin'
+        TeacherType::create([
+            'name' => 'School Head'
         ]);
-        Role::create([
-            'name'=>'Admin'
-        ]);
-        Role::create([
-            'name'=>'School'
-        ]);
-        Role::create([
-            'name'=>'Teacher'
-        ]);
-        Role::create([
-            'name'=>'Student'
+        TeacherType::create([
+            'name' => 'Teacher'
         ]);
     }
 
@@ -43,6 +34,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('roles');
+        Schema::dropIfExists('teacher_types');
     }
 };

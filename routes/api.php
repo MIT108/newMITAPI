@@ -24,6 +24,6 @@ Route::middleware('auth:sanctum')->group(function () {
 
 
 
-require __DIR__.'\modules\authentication.php';
-require __DIR__.'\modules\school.php';
-require __DIR__.'\modules\user.php';
+require 'modules\authentication.php';
+require 'modules\school.php';
+require 'modules\user.php';

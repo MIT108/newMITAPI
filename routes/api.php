@@ -5,6 +5,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\SchoolController;
+use App\Http\Controllers\TeacherController;
 use App\Http\Controllers\UserController;
 
 /*
@@ -69,6 +70,11 @@ Route::prefix('school')->group(function () {
             Route::get('location-information/{id}', [SchoolController::class, 'locationInformation'])->name('location-information');
             Route::get('change-status/{id}/{status}', [SchoolController::class, 'changeSchoolLocationStatus'])->name('change-status-school-location');
             Route::get('delete/{id}', [SchoolController::class, 'deleteSchoolLocation'])->name('delete-school-location');
+        });
+
+        //teachers Routes
+        Route::prefix('teacher')->group(function(){
+            Route::post('upload-teacher-excel', [TeacherController::class, 'uploadTeacherExcel'])->name('upload-teacher-excel');
         });
     });
 });

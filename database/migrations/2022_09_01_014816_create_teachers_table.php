@@ -19,6 +19,7 @@ return new class extends Migration
             $table->foreignId('school_id')->constrained()->onDelete("cascade")->onUpdate("cascade");
             $table->string('qualification')->nullable();
             $table->string('status')->default('inactive');
+            $table->string('manager')->default(0);
             $table->timestamps();
         });
     }

@@ -28,7 +28,9 @@ class User extends Authenticatable
         'role_id',
         'profile',
         'cover',
-        'password_changed'
+        'password_changed',
+        'country_id',
+        'creator_id'
     ];
 
     /**
@@ -52,5 +54,17 @@ class User extends Authenticatable
 
     public function role(){
         return $this->belongsTo(Role::class);
+    }
+    public function country(){
+        return $this->belongsTo(Country::class);
+    }
+    public function teacher(){
+        return $this->hasOne(Teacher::class);
+    }
+    public function student(){
+        return $this->hasOne(Student::class);
+    }
+    public function creator(){
+        return $this->belongsTo(User::class, 'creator_id');
     }
 }

@@ -23,4 +23,15 @@ class School extends Model
         'status',
         'description',
     ];
+
+    public function school_type(){
+        return $this->belongsTo(SchoolType::class);
+    }
+
+    // public function student(){
+    //     return $this->hasMany(Student::class);
+    // }
+    public function teacher(){
+        return $this->hasMany(Teacher::class);
+    }
 }

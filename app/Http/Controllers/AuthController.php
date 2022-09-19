@@ -6,6 +6,7 @@ use App\Jobs\SendEmailJob;
 use App\Models\Role;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 
@@ -108,11 +109,18 @@ class AuthController extends Controller
                         $fields += [
                             'password' => Str::random(8)
                         ];
-                        $hashed = Hash::make($fields['password']);
-                        if (Hash::needsRehash($hashed)) {
-                            $hashed = Hash::make($fields['password']);
-                        }
+                        // $hashed = Hash::make($fields['password']);
+                        $hashed = Hash::make('password');
+                        // if (Hash::needsRehash($hashed)) {
+                        //     $hashed = Hash::make($fields['password']);
+                        // }
 
+                        $fields += [
+                            'creator_id' => Auth::user()->id
+                        ];
+                        $fields += [
+                            'country_id' => Auth::user()->country_id
+                        ];
                         $password = $fields['password'];
                         $email = $fields['email'];
                         $name = $fields['name'];

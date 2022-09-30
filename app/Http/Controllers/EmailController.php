@@ -27,12 +27,12 @@ class EmailController extends Controller
             //Server settings
             $mail->SMTPDebug = SMTP::DEBUG_SERVER;                      //Enable verbose debug output
             $mail->isSMTP();                                            //Send using SMTP
-            $mail->Host       = 'smtp.gmail.com';                     //Set the SMTP server to send through
+            $mail->Host       = env('MAIL_HOST');                     //Set the SMTP server to send through
             $mail->SMTPAuth   = true;                                   //Enable SMTP authentication
-            $mail->Username   = $senderEmail;                     //SMTP username
-            $mail->Password   = $senderPassword;                               //SMTP password //jfltubgqbwniivya
-            $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;            //Enable implicit TLS encryption
-            $mail->Port       = 465;
+            $mail->Username   = env('MAIL_USERNAME');                     //SMTP username
+            $mail->Password   = env('MAIL_PASSWORD');                            //SMTP password //jfltubgqbwniivya
+            $mail->SMTPSecure = env('MAIL_ENCRYPTION');            //Enable implicit TLS encryption
+            $mail->Port       = env('MAIL_PORT');
             $mail->SMTPDebug  = 0;                               //TCP port to connect to; use 587 if you have set `SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS`
 
             //Recipients

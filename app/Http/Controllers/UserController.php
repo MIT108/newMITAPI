@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Jobs\SendEmailJob;
 use App\Models\Role;
+use App\Models\Teacher;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -140,20 +141,42 @@ class UserController extends Controller
     public function authUser(){
         $response = []; //
         $code = 0;
-            try {
-                $user = User::find(Auth::user()->id);
-                $response  = [
-                    'data' => $user,
-                    'message' => "successful"
-                ];
-                $code = 200;
-            } catch (\Throwable $th) {
-                $response = [
-                    'error' => $th->getMessage(),
-                    'message' => "Server Error"
-                ];
-                $code = 500;
-            }
+        try {
+            $user = User::find(Auth::user()->id);
+            $response  = [
+                'data' => $user,
+                'message' => "successful"
+            ];
+            $code = 200;
+        } catch (\Throwable $th) {
+            $response = [
+                'error' => $th->getMessage(),
+                'message' => "Server Error"
+            ];
+            $code = 500;
+        }
+        return response($response, $code);
+    }
+
+    public function listAccount(){
+        $response = []; //
+        $code = 0;
+        try {
+            $response  = [
+                'data' => [
+                    "teacher" => Teacher::where('user_id', Auth::user()->id)->with('school')->get(),
+                    "student" => Teacher::where('user_id', Auth::user()->id)->with('school')->get()
+                ],
+                'message' => "successful"
+            ];
+            $code = 200;
+        } catch (\Throwable $th) {
+            $response = [
+                'error' => $th->getMessage(),
+                'message' => "Server Error"
+            ];
+            $code = 500;
+        }
         return response($response, $code);
 
     }

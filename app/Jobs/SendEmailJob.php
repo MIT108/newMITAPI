@@ -8,11 +8,13 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\SendMail;
 
 class SendEmailJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
-    public $subject, $receiverEmail, $receiverName, $body;
+    protected $subject, $receiverEmail, $receiverName, $body;
 
     /**
      * Create a new job instance.
@@ -36,6 +38,7 @@ class SendEmailJob implements ShouldQueue
     public function handle()
     {
         //
-        app('App\Http\Controllers\EmailController')->sendMail($this->subject, $this->body, $this->receiverEmail, $this->receiverName);
+
+        Mail::to($this->receiverEmail)->send(new SendMail($this->subject, $this->body));
     }
 }

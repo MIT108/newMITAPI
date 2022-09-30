@@ -30,7 +30,8 @@ class User extends Authenticatable
         'cover',
         'password_changed',
         'country_id',
-        'creator_id'
+        'creator_id',
+        'otp_verification'
     ];
 
     /**
@@ -59,10 +60,10 @@ class User extends Authenticatable
         return $this->belongsTo(Country::class);
     }
     public function teacher(){
-        return $this->hasOne(Teacher::class);
+        return $this->hasMany(Teacher::class);
     }
     public function student(){
-        return $this->hasOne(Student::class);
+        return $this->hasMany(Student::class);
     }
     public function creator(){
         return $this->belongsTo(User::class, 'creator_id');

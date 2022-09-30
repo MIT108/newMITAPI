@@ -3,12 +3,15 @@
 namespace App\Http\Controllers;
 
 use App\Jobs\SendEmailJob;
+use App\Models\Otp;
 use App\Models\Role;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
+use App\Mail\SendMail;
 
 class AuthController extends Controller
 {
@@ -35,23 +38,39 @@ class AuthController extends Controller
                 ];
                 $code = 422;
             } else {
+                if ($user->otp_verification == 1) {
+                    if ($user->password_changed == 1) {
 
-                if ($user->status == "inactive") {
-                    $response = [
-                        'message' => 'Account is suspended'
-                    ];
-                    $code = 422;
+                        if ($user->status == "inactive") {
+                            $response = [
+                                'message' => 'Account is suspended'
+                            ];
+                            $code = 422;
+                        } else {
+
+                            $token = $user->createToken('authenticationToken')->plainTextToken;
+
+                            $response = [
+                                'data' => $user,
+                                'token' => $token,
+                                'message' => 'login successful'
+                            ];
+
+                            $code = 200;
+                        }
+                    } else {
+                        $response = [
+                            'message' => 'Account default password not changed',
+                            'data' => $user
+                        ];
+                        $code = 424;
+                    }
                 } else {
-
-                    $token = $user->createToken('authenticationToken')->plainTextToken;
-
                     $response = [
-                        'data' => $user,
-                        'token' => $token,
-                        'message' => 'login successful'
+                        'message' => 'Account not verified',
+                        'data' => $user
                     ];
-
-                    $code = 200;
+                    $code = 423;
                 }
             }
         } catch (\Throwable $th) {
@@ -62,6 +81,177 @@ class AuthController extends Controller
             $code = 500;
         }
 
+        return response($response, $code);
+    }
+    public function sendOTPCode($id)
+    {
+        $user = User::find($id);
+
+        $response = [];
+        $code = 0;
+        if ($user) {
+            if ($user->otp_verification == 0) {
+
+                try {
+                    Otp::where('user_id', $user->id)->delete();
+                    $code       =   rand(1000, 9999);
+
+                    Otp::create([
+                        'code' => $code,
+                        'user_id' => $user->id
+                    ]);
+                    $body = "Your account is on verification status, enter the following code to verify your account. CODE: $code";
+                    $subject = "Account OTP Verification";
+
+                    SendEmailJob::dispatch($subject, $body, $user->email, $user->name);
+                    $response = [
+                        'message' => 'OTP code send successfully',
+                        'data' => $user
+                    ];
+                    $code = 200;
+                } catch (\Throwable $th) {
+                    //throw $th;
+                    $response = [
+                        'error' => $th->getMessage(),
+                        'message' => 'Internal server error contact the administrator',
+                    ];
+                    $code = 500;
+                }
+            } else {
+                $response = [
+                    'message' => 'Your account has been verified'
+                ];
+                $code = 422;
+            }
+        } else {
+            $response = [
+                'message' => 'Users does not exist'
+            ];
+            $code = 422;
+        }
+
+        return response($response, $code);
+    }
+
+    public function validateOTPCode($id, Request $request)
+    {
+
+        $fields = $request->validate([
+            'code' => 'required',
+        ]);
+
+        $user = User::find($id);
+
+        $response = [];
+        $code = 0;
+        if ($user) {
+            if ($user->otp_verification == 0) {
+                try {
+                    if ($this->checkUserCode($id, $fields['code'])) {
+                        $user->otp_verification = 1;
+
+                        $user->save();
+
+
+                        $response = [
+                            'data' => $user,
+                            'message' => 'successful operation'
+                        ];
+
+                        $code = 424;
+                    } else {
+                        $response = [
+                            'message' => 'This code does not exist'
+                        ];
+                        $code = 422;
+                    }
+                } catch (\Throwable $th) {
+                    //throw $th;
+                    $response = [
+                        'error' => $th->getMessage(),
+                        'message' => 'Internal server error contact the administrator',
+                    ];
+                    $code = 500;
+                }
+            } else {
+                $response = [
+                    'message' => 'Your account has been verified'
+                ];
+                $code = 422;
+            }
+        } else {
+            $response = [
+                'message' => 'Users does not exist'
+            ];
+            $code = 422;
+        }
+
+        return response($response, $code);
+    }
+
+
+    public function checkUserCode($user_id, $code)
+    {
+        if (Otp::where('user_id', $user_id)->where('code', $code)->count() > 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public function changeUserStartupPassword(Request $request, $id)
+    {
+
+        $fields = $request->validate([
+            'password' => 'required',
+        ]);
+
+        $user = User::find($id);
+
+        $response = [];
+        $code = 0;
+        if ($user) {
+            if($user->password_changed == 0){
+                try {
+                    $hashed = Hash::make($fields['password']);
+                    if (Hash::needsRehash($hashed)) {
+                        $hashed = Hash::make($fields['password']);
+                    }
+                    $user->password = $hashed;
+                    $user->password_changed = 1;
+                    $user->save();
+    
+                    $token = $user->createToken('authenticationToken')->plainTextToken;
+    
+                    $response = [
+                        'data' => $user,
+                        'token' => $token,
+                        'message' => 'login successful'
+                    ];
+    
+                    $code = 200;
+                } catch (\Throwable $th) {
+                    //throw $th;
+                    $response = [
+                        'error' => $th->getMessage(),
+                        'message' => 'Internal server error contact the administrator',
+                    ];
+                    $code = 500;
+                }
+
+            }else{
+                $response = [
+                    'message' => 'User is not allowed to change his password here'
+                ];
+                $code = 422;
+
+            }
+        } else {
+            $response = [
+                'message' => 'Users does not exist'
+            ];
+            $code = 422;
+        }
         return response($response, $code);
     }
     public function logout()
@@ -190,5 +380,4 @@ class AuthController extends Controller
             return false;
         }
     }
-
 }

@@ -39,6 +39,9 @@ Route::middleware('auth:sanctum')->group(function () {
 
 Route::prefix('auth')->group(function () {
     Route::post('/login', [AuthController::class, 'login'])->name('user-login');
+    Route::get('/send-otp/{id}', [AuthController::class, 'sendOTPCode'])->name('send-otp-code');
+    Route::post('/send-otp/{id}', [AuthController::class, 'validateOTPCode'])->name('validate-otp-code');
+    Route::post('/change-startup-password/{id}', [AuthController::class, 'changeUserStartupPassword'])->name('change-user-startup-password');
 
     Route::middleware('auth:sanctum')->group(function () {
         Route::post('/create', [AuthController::class, 'create'])->name('user-creation');
@@ -64,7 +67,6 @@ Route::prefix('school')->group(function () {
         //location Routes
         Route::prefix('location')->group(function(){
             Route::post('create', [SchoolController::class, 'createSchoolLocation'])->name('create-school-location');
-            Route::get('list-locations', [SchoolController::class, 'listLocations'])->name('list-location');
             Route::get('active-user-list-locations', [SchoolController::class, 'activeUserListLocations'])->name('active-user-list-locations');
             Route::get('list-school-locations/{user_id}', [SchoolController::class, 'listSchoolLocations'])->name('list-school-location');
             Route::get('location-information/{id}', [SchoolController::class, 'locationInformation'])->name('location-information');
@@ -77,6 +79,12 @@ Route::prefix('school')->group(function () {
             Route::post('upload-teacher-excel', [TeacherController::class, 'uploadTeacherExcel'])->name('upload-teacher-excel');
         });
     });
+
+    //location
+    Route::prefix('location')->group(function(){
+            Route::get('list-locations', [SchoolController::class, 'listLocations'])->name('list-location');
+    });
+
 });
 
 
@@ -97,6 +105,9 @@ Route::prefix('user')->group(function () {
         Route::get('/list-user/{role_id}', [UserController::class, 'listUser'])->name('list-user');
         Route::get('/list-active-user/{role_id}', [UserController::class, 'listActiveUser'])->name('list-active-user');
         Route::get('/list-inactive-user/{role_id}', [UserController::class, 'listInActiveUser'])->name('list-inactive-user');
+
+        //school
+        Route::get('/list-account', [UserController::class, 'listAccount'])->name('list-account');
 
     });
 });

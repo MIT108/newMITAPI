@@ -25,9 +25,10 @@ return new class extends Migration
             $table->foreignId('role_id')->constrained()->onDelete('cascade')->onUpdate('cascade');
             $table->foreignId('country_id')->constrained()->onDelete('cascade')->onUpdate('cascade');
             $table->integer('creator_id')->nullable();
-            $table->string('contact');
+            $table->string('contact')->unique();
             $table->string('status')->default('active');
             $table->integer('password_changed')->default(0);
+            $table->integer('otp_verification')->default(0);
             $table->string('address')->nullable();
             $table->string('profile')->nullable();
             $table->string('cover')->nullable();
@@ -42,7 +43,9 @@ return new class extends Migration
             'role_id' => 1,
             'country_id' => 1,
             'password' => Hash::make("password"),
-            'contact' => "0023765852862"
+            'contact' => "0023765852862",
+            'otp_verification' => '1',
+            'password_changed' => '1',
         ]);
         User::create([
             'name' => 'Cameroon',
@@ -51,7 +54,9 @@ return new class extends Migration
             'role_id' => 2,
             'country_id' => 1,
             'password' => Hash::make("password"),
-            'contact' => "00237658580000"
+            'contact' => "00237658580000",
+            'otp_verification' => '1',
+            'password_changed' => '1',
         ]);
         User::create([
             'name' => 'Angola',
@@ -60,7 +65,9 @@ return new class extends Migration
             'role_id' => 2,
             'country_id' => 2,
             'password' => Hash::make("password"),
-            'contact' => "00237658528670"
+            'contact' => "00237658528670",
+            'otp_verification' => '1',
+            'password_changed' => '1',
         ]);
         User::create([
             'name' => 'Central African Republic',
@@ -69,7 +76,9 @@ return new class extends Migration
             'role_id' => 2,
             'country_id' => 3,
             'password' => Hash::make("password"),
-            'contact' => "00237658528671"
+            'contact' => "00237658528671",
+            'otp_verification' => '1',
+            'password_changed' => '1',
         ]);
         User::create([
             'name' => 'Chad',
@@ -78,7 +87,9 @@ return new class extends Migration
             'role_id' => 2,
             'country_id' => 4,
             'password' => Hash::make("password"),
-            'contact' => "00237658528673"
+            'contact' => "00237658528673",
+            'otp_verification' => '1',
+            'password_changed' => '1',
         ]);
         User::create([
             'name' => 'Democratic Republic of the Congo',
@@ -87,7 +98,9 @@ return new class extends Migration
             'role_id' => 2,
             'country_id' => 5,
             'password' => Hash::make("password"),
-            'contact' => "00237658528674"
+            'contact' => "00237658528674",
+            'otp_verification' => '1',
+            'password_changed' => '1',
         ]);
         User::create([
             'name' => 'Zambia',
@@ -96,7 +109,9 @@ return new class extends Migration
             'role_id' => 2,
             'country_id' => 6,
             'password' => Hash::make("password"),
-            'contact' => "002376585283"
+            'contact' => "002376585283",
+            'otp_verification' => '1',
+            'password_changed' => '1',
         ]);
         User::create([
             'name' => 'Equatorial Guinea',
@@ -105,7 +120,9 @@ return new class extends Migration
             'role_id' => 2,
             'country_id' => 7,
             'password' => Hash::make("password"),
-            'contact' => "00237658528675"
+            'contact' => "00237658528675",
+            'otp_verification' => '1',
+            'password_changed' => '1',
         ]);
         User::create([
             'name' => 'Gabon',
@@ -114,7 +131,9 @@ return new class extends Migration
             'role_id' => 2,
             'country_id' => 8,
             'password' => Hash::make("password"),
-            'contact' => "00237658528676"
+            'contact' => "00237658528676",
+            'otp_verification' => '1',
+            'password_changed' => '1',
         ]);
         User::create([
             'name' => 'São Tomé and Príncipe',
@@ -123,7 +142,9 @@ return new class extends Migration
             'role_id' => 2,
             'country_id' => 9,
             'password' => Hash::make("password"),
-            'contact' => "00237658528678"
+            'contact' => "00237658528678",
+            'otp_verification' => '1',
+            'password_changed' => '1',
         ]);
         User::create([
             'name' => 'Rwanda',
@@ -132,7 +153,9 @@ return new class extends Migration
             'role_id' => 2,
             'country_id' => 10,
             'password' => Hash::make("password"),
-            'contact' => "00237658528700"
+            'contact' => "00237658528700",
+            'otp_verification' => '1',
+            'password_changed' => '1',
         ]);
         User::create([
             'name' => 'Burundi',
@@ -141,8 +164,19 @@ return new class extends Migration
             'role_id' => 2,
             'country_id' => 11,
             'password' => Hash::make("password"),
-            'contact' => "00237658528000"
+            'contact' => "00237658528000",
+            'otp_verification' => '1',
+            'password_changed' => '1',
         ]);
+        // User::create([
+        //     'name' => 'Miendjem Thierry',
+        //     'email' => "miendjemthierry01@gmail.com",
+        //     'user_name' => 'MIT108',
+        //     'role_id' => 1,
+        //     'country_id' => 1,
+        //     'password' => Hash::make("password"),
+        //     'contact' => "00237658528622",
+        // ]);
     }
 
     /**

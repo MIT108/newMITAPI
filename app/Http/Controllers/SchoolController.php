@@ -99,7 +99,7 @@ class SchoolController extends Controller
 
         try {
             //code...
-            $school = School::with(['school_type', 'teacher'])->get();
+            $school = School::where('status', 'active')->with(['school_type', 'teacher'])->get();
 
             $response = [
                 'data' => $school,

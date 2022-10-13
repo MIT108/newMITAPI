@@ -19,7 +19,7 @@ class School extends Model
         'lat',
         'lng',
         'logo',
-        'cover_picture',
+        'cover',
         'status',
         'description',
     ];

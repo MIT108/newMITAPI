@@ -25,7 +25,7 @@ return new class extends Migration
             $table->decimal('lat', 5.0000000000);
             $table->decimal('lng', 5.0000000000);
             $table->string('logo')->nullable();
-            $table->string('cover_picture')->nullable();
+            $table->string('cover')->nullable();
             $table->enum('status',['pending', 'active','inactive'])->default('pending');
             $table->text('description')->nullable();
             $table->timestamps();

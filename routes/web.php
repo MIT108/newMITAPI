@@ -1,6 +1,6 @@
 <?php
 
-use App\Jobs\SendEmailJob;
+use App\Events\TestEvent;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -15,9 +15,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-
-    // app('App\Http\Controllers\EmailController')->sendMail("School account created", "success", "miendjemthierry01@gmail.com", "Miendjem Thierry Idris");
-    SendEmailJob::dispatch("School account created", "success", "miendjemthierry01@gmail.com", "Miendjem Thierry Idris");
+     event(new TestEvent());
     return view('welcome');
 });
 

@@ -4,7 +4,9 @@ use App\Http\Controllers\RoleController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\ClasseController;
 use App\Http\Controllers\SchoolController;
+use App\Http\Controllers\SubjectController;
 use App\Http\Controllers\TeacherController;
 use App\Http\Controllers\UserController;
 
@@ -78,11 +80,23 @@ Route::prefix('school')->group(function () {
         Route::prefix('teacher')->group(function(){
             Route::post('upload-teacher-excel', [TeacherController::class, 'uploadTeacherExcel'])->name('upload-teacher-excel');
         });
+
+        Route::prefix('classe')->group(function(){
+            Route::post('add-classe', [ClasseController::class, 'add'])->name('add-classe');
+            Route::get('delete/{id}', [ClasseController::class, 'delete'])->name('delete-classe');
+            Route::get('list/{school_id}', [ClasseController::class, 'list'])->name('lis-classes');
+        });
+        Route::prefix('subject')->group(function(){
+            Route::post('add', [SubjectController::class, 'add'])->name('add-subject');
+            Route::get('delete/{id}', [SubjectController::class, 'delete'])->name('delete-subject');
+            Route::get('list/{classe_id}', [SubjectController::class, 'list'])->name('lis-subject');
+        });
+
     });
 
     //location
     Route::prefix('location')->group(function(){
-            Route::get('list-locations', [SchoolController::class, 'listLocations'])->name('list-location');
+        Route::get('list-locations', [SchoolController::class, 'listLocations'])->name('list-location');
     });
 
 });
